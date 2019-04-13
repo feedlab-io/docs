@@ -5,7 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
 
 toc_footers:
-  - <a href='https://feedlab.io/signup'>Sign Up for a Developer Key</a>
+  - <a href='https://feedlab.io/app/signup'>Sign Up for a Developer Key</a>
 
 includes:
   - errors

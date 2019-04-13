@@ -5,7 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
 
 toc_footers:
-  - <a href='http://localhost/signup'>Sign Up for a Developer Key</a>
+  - <a href='https://feedlab.io/signup'>Sign Up for a Developer Key</a>
 
 includes:
   - errors
@@ -32,7 +32,7 @@ curl "api_endpoint_here"
 
 > Make sure to replace `$TOKEN` with your Token.
 
-FeedLab uses Tokens to allow access to the API. You can register a new FeedLab Tokens at our [developer portal](http://localhost).
+FeedLab uses Tokens to allow access to the API. You can register a new FeedLab Tokens at our [website](https://feedlab.io/app/signup).
 
 FeedLab expects for the Token to be included in all API requests to the server in a header that looks like the following:
 
@@ -47,13 +47,10 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
 ## Subscribe to Feed
 
 ```shell
-curl "http://api.localhost/v1/subscriptions/" \
-  -H "Authorization: $TOKEN"
-  -H "Content-Type: application/json" 
-  -d '{
-    "url": "https://webrazzi.com/feed/"
-    "callback": "https://webhook.site/cb0b8f90-d313-436f-b829-dc259428f4f9"
-  }'
+curl "https://api.feedlab.io/v1/subscriptions/" \
+  -H "Authorization: $TOKEN" \
+  -F "url=https://webrazzi.com/feed/" \
+  -F "callback=http://webhook.site/e71b8102-bfeb-4a54-aed7-61b5e04c2790"
 ```
 
 > The above command returns JSON structured like this:
@@ -68,7 +65,7 @@ This endpoint **subscribes** user to provided ```url``` and server will POST new
 
 ### HTTP Request
 
-```POST  http://api.localhost/v1/subscriptions/```
+```POST  https://api.feedlab.io/v1/subscriptions/```
 
 ### JSON Data
 
@@ -76,12 +73,13 @@ Key | Description
 --- | ---
 url | Feed URL to be subscribed
 callback | Callback URL for feed updates
+format | ```json``` or ```xml```  Defaults to ```json```
 
 
-## Get All Subscriptions
+## Get All Subscriptions or Retrieve One Subscription
 
 ```shell
-curl "http://api.localhost/v1/subscriptions/"
+curl "https://api.feedlab.io/v1/subscriptions/" \
   -H "Authorization: $TOKEN"
 ```
 
@@ -132,22 +130,24 @@ curl "http://api.localhost/v1/subscriptions/"
 ]
 ```
 
-This endpoint **retrieves** all subscriptions.
+This endpoint **lists** or ***retrieves*** subscriptions.
 
 ### HTTP Request
 
-`GET http://api.localhost/v1/subscriptions/`
+`GET https://api.feedlab.io/v1/subscriptions/`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-page | 1 | Set this for pagination
+mode | list | ```list```: List all subscriptions
+||| ```retrieve```: Retrieve one subscription
+url | optional | Subscribed url. Only set this on ```retrieve``` mode
 
 ## Delete a Specific Subscription
 
 ```shell
-curl "http://api.localhost/v1/subscriptions/" \
+curl "https://api.feedlab.io/v1/subscriptions/" \
   -X DELETE \
   -H "Content-Type: application/json" \
   -H "Authorization: $TOKEN" \
@@ -169,7 +169,7 @@ This endpoint **deletes** a specific subscription.
 
 ### HTTP Request
 
-`DELETE http://api.localhost/subscriptions/`
+`DELETE https://api.feedlab.io/subscriptions/`
 
 ### JSON Data
 

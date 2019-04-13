@@ -231,7 +231,7 @@
                     <a href="#subscribe-to-feed" class="toc-h2 toc-link" data-title="Subscribe to Feed">Subscribe to Feed</a>
                   </li>
                   <li>
-                    <a href="#get-all-subscriptions" class="toc-h2 toc-link" data-title="Get All Subscriptions">Get All Subscriptions</a>
+                    <a href="#get-all-subscriptions-or-retrieve-one-subscription" class="toc-h2 toc-link" data-title="Get All Subscriptions or Retrieve One Subscription">Get All Subscriptions or Retrieve One Subscription</a>
                   </li>
                   <li>
                     <a href="#delete-a-specific-subscription" class="toc-h2 toc-link" data-title="Delete a Specific Subscription">Delete a Specific Subscription</a>
@@ -243,7 +243,7 @@
           </li>
       </ul>
         <ul class="toc-footer">
-            <li><a href='http://localhost/signup'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://feedlab.io/signup'>Sign Up for a Developer Key</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -265,7 +265,7 @@ curl <span class="s2">"api_endpoint_here"</span>
 <p>Make sure to replace <code>$TOKEN</code> with your Token.</p>
 </blockquote>
 
-<p>FeedLab uses Tokens to allow access to the API. You can register a new FeedLab Tokens at our <a href="http://localhost">developer portal</a>.</p>
+<p>FeedLab uses Tokens to allow access to the API. You can register a new FeedLab Tokens at our <a href="https://feedlab.io/app/signup">website</a>.</p>
 
 <p>FeedLab expects for the Token to be included in all API requests to the server in a header that looks like the following:</p>
 
@@ -274,13 +274,10 @@ curl <span class="s2">"api_endpoint_here"</span>
 <aside class="notice">
 You must replace <code>$TOKEN</code> with your personal Token. Use export <code>TOKEN=xxxxxx</code>
 </aside>
-<h1 id='subscriptions'>Subscriptions</h1><h2 id='subscribe-to-feed'>Subscribe to Feed</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://api.localhost/v1/subscriptions/"</span> <span class="se">\</span>
-  -H <span class="s2">"Authorization: </span><span class="nv">$TOKEN</span><span class="s2">"</span>
-  -H <span class="s2">"Content-Type: application/json"</span> 
-  -d <span class="s1">'{
-    "url": "https://webrazzi.com/feed/"
-    "callback": "https://webhook.site/cb0b8f90-d313-436f-b829-dc259428f4f9"
-  }'</span>
+<h1 id='subscriptions'>Subscriptions</h1><h2 id='subscribe-to-feed'>Subscribe to Feed</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.feedlab.io/v1/subscriptions/"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: </span><span class="nv">$TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -F <span class="s2">"url=https://webrazzi.com/feed/"</span> <span class="se">\</span>
+  -F <span class="s2">"callback=http://webhook.site/e71b8102-bfeb-4a54-aed7-61b5e04c2790"</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
@@ -291,7 +288,7 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
 </span></code></pre>
 <p>This endpoint <strong>subscribes</strong> user to provided <code>url</code> and server will POST new feed items to provided <code>callback</code></p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>POST  http://api.localhost/v1/subscriptions/</code></p>
+<p><code>POST  https://api.feedlab.io/v1/subscriptions/</code></p>
 <h3 id='json-data'>JSON Data</h3>
 <table><thead>
 <tr>
@@ -307,8 +304,12 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
 <td>callback</td>
 <td>Callback URL for feed updates</td>
 </tr>
+<tr>
+<td>format</td>
+<td><code>json</code> or <code>xml</code>  Defaults to <code>json</code></td>
+</tr>
 </tbody></table>
-<h2 id='get-all-subscriptions'>Get All Subscriptions</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://api.localhost/v1/subscriptions/"</span>
+<h2 id='get-all-subscriptions-or-retrieve-one-subscription'>Get All Subscriptions or Retrieve One Subscription</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.feedlab.io/v1/subscriptions/"</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: </span><span class="nv">$TOKEN</span><span class="s2">"</span>
 </code></pre>
 <blockquote>
@@ -357,9 +358,9 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
     </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
-<p>This endpoint <strong>retrieves</strong> all subscriptions.</p>
+<p>This endpoint <strong>lists</strong> or <strong><em>retrieves</em></strong> subscriptions.</p>
 <h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://api.localhost/v1/subscriptions/</code></p>
+<p><code>GET https://api.feedlab.io/v1/subscriptions/</code></p>
 <h3 id='query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
@@ -369,12 +370,22 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
 </tr>
 </thead><tbody>
 <tr>
-<td>page</td>
-<td>1</td>
-<td>Set this for pagination</td>
+<td>mode</td>
+<td>list</td>
+<td><code>list</code>: List all subscriptions</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>retrieve</code>: Retrieve one subscription</td>
+</tr>
+<tr>
+<td>url</td>
+<td>optional</td>
+<td>Subscribed url. Only set this on <code>retrieve</code> mode</td>
 </tr>
 </tbody></table>
-<h2 id='delete-a-specific-subscription'>Delete a Specific Subscription</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://api.localhost/v1/subscriptions/"</span> <span class="se">\</span>
+<h2 id='delete-a-specific-subscription'>Delete a Specific Subscription</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.feedlab.io/v1/subscriptions/"</span> <span class="se">\</span>
   -X DELETE <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: </span><span class="nv">$TOKEN</span><span class="s2">"</span> <span class="se">\</span>
@@ -392,7 +403,7 @@ You must replace <code>$TOKEN</code> with your personal Token. Use export <code>
 </span></code></pre>
 <p>This endpoint <strong>deletes</strong> a specific subscription.</p>
 <h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://api.localhost/subscriptions/</code></p>
+<p><code>DELETE https://api.feedlab.io/subscriptions/</code></p>
 <h3 id='json-data-2'>JSON Data</h3>
 <table><thead>
 <tr>
